@@ -5,7 +5,7 @@
  * @returns {string[]}
  */
 export function sortStrings(arr, param = 'asc') {
-  let arrCopy = [...arr];
+  const arrCopy = [...arr];
   const locales = ['ru', 'en'];
   const options = {caseFirst: 'upper'};
 
