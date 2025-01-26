@@ -13,25 +13,25 @@ export function trimSymbols(string, size) {
     return string;
   }
 
-  const result = [string[0]];
+  let result = string[0];
   const restSymbols = string.slice(1);
 
-  let currentSymbol = string[0];
+  let currentSymbol = result;
   let currentSymbolCount = 1;
 
   for (const symbol of restSymbols) {
     if (currentSymbol !== symbol) {
       currentSymbol = symbol;
       currentSymbolCount = 1;
-      result.push(symbol);
+      result += symbol;
       continue;
     }
 
     if (symbol === currentSymbol && currentSymbolCount < size) {
       currentSymbolCount++;
-      result.push(symbol);
+      result += symbol;
     }
   }
 
-  return result.join('');
+  return result;
 }
