@@ -67,18 +67,9 @@ export default class SortableTable {
     return elem.firstElementChild;
   }
 
-  createArrowTemplate() {
-    return `
-      <span data-element="arrow" class="sortable-table__sort-arrow">
-        <span class="sort-arrow"></span>
-      </span>
-    `;
-  }
-
   sort(field, order) {
-    const headerColumns = this.subElements.header.querySelectorAll('.sortable-table__cell[data-sortable="true"]');
+    const sortableHeaderColumns = this.subElements.header.querySelectorAll('.sortable-table__cell[data-sortable="true"]');
     const columnToSort = this.headerConfig.find(item => item.id === field);
-    const currentHeaderColumn = Array.from(headerColumns).find((column) => column.dataset.id === columnToSort.id);
     const sortType = columnToSort.sortType;
 
     if (!columnToSort.sortable) {
@@ -93,21 +84,11 @@ export default class SortableTable {
       this.data = this.sortNumber(field, order, this.data);
     }
 
-    headerColumns.forEach((column) => {
-      const arrow = column.querySelector('[data-element="arrow"]');
-
-      column.dataset.order = '';
-
-      if (arrow) {
-        arrow.remove();
-      }
-
-    });
-    currentHeaderColumn.dataset.order = order;
-    currentHeaderColumn.append(this.createElement(this.createArrowTemplate()));
+    sortableHeaderColumns.forEach((column) => column.dataset.order = order);
 
     this.subElements.body.innerHTML = this.createTableBodyTemplate();
   }
+
 
   sortString(field, order, data) {
     const arrCopy = [...data];
