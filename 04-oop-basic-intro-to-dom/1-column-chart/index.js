@@ -15,8 +15,15 @@ export default class ColumnChart {
     this.value = value;
     this.formatHeading = formatHeading;
 
-    this.element = this.renderElement();
+    this.element = this.createElement(this.createTemplate());
     this.toggleSkeleton();
+  }
+
+  createElement(html) {
+    const elem = document.createElement('div');
+    elem.innerHTML = html;
+
+    return elem.firstElementChild;
   }
 
   getColumnProps(data) {
@@ -31,7 +38,7 @@ export default class ColumnChart {
     });
   }
 
-  getLinkTemplate() {
+  createLinkTemplate() {
     if (this.link) {
       return `<a href="${this.link}" class="column-chart__link">View all</a>`;
     }
@@ -39,34 +46,27 @@ export default class ColumnChart {
     return '';
   }
 
-  getColumnChartTemplate() {
+  createColumnChartTemplate() {
     return this.getColumnProps(this.data)
       .map(({value, percent}) => `<div style="--value: ${value}" data-tooltip="${percent}"></div>`)
       .join('');
   }
 
-  getTemplate() {
+  createTemplate() {
     return `
       <div class="column-chart" style="--chart-height: ${this.chartHeight}">
         <div class="column-chart__title">
           ${this.label}
-          ${this.getLinkTemplate()}
+          ${this.createLinkTemplate()}
         </div>
         <div class="column-chart__container">
           <div data-element="header" class="column-chart__header">${this.formatHeading(this.value)}</div>
           <div data-element="body" class="column-chart__chart">
-            ${this.getColumnChartTemplate()}
+            ${this.createColumnChartTemplate()}
           </div>
         </div>
       </div>
     `;
-  }
-
-  renderElement() {
-    const elem = document.createElement('div');
-    elem.innerHTML = this.getTemplate();
-
-    return elem.firstElementChild;
   }
 
   toggleSkeleton() {
@@ -78,7 +78,7 @@ export default class ColumnChart {
   update(newData) {
     this.data = newData;
     this.toggleSkeleton();
-    this.element.querySelector('[data-element="body"]').innerHTML = this.getColumnChartTemplate();
+    this.element.querySelector('[data-element="body"]').innerHTML = this.createColumnChartTemplate();
   }
 
   remove() {
