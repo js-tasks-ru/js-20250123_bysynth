@@ -5,10 +5,6 @@ const BACKEND_URL = 'https://course-js.javascript.ru';
 
 export default class SortableTableV3 extends SortableTableV2 {
   static pageSize = 20;
-
-  url;
-  offsetStart = 0;
-  offsetEnd = 20;
   isLoading = false;
 
   constructor(headersConfig, {
@@ -20,11 +16,7 @@ export default class SortableTableV3 extends SortableTableV2 {
     url,
     isSortLocally = false
   } = {}) {
-    super(headersConfig, {data, sorted});
-
-    this.url = url;
-    this.isSortLocally = isSortLocally;
-    this.render();
+    super(headersConfig, {data, sorted, url, isSortLocally});
   }
 
   createUrl() {

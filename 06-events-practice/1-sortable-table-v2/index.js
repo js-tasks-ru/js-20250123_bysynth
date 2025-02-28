@@ -1,13 +1,19 @@
 import SortableTable from '../../05-dom-document-loading/2-sortable-table-v1/index.js';
 
 export default class SortableTableV2 extends SortableTable {
+  offsetStart = 0;
+  offsetEnd = 20;
+
   constructor(headersConfig, {
     data = [],
-    sorted = {}
+    sorted = {},
+    isSortLocally = true,
+    url = ''
   } = {}) {
     super(headersConfig, data);
+    this.url = url;
     this.sorted = sorted;
-    this.isSortLocally = true;
+    this.isSortLocally = isSortLocally;
     this.arrowElement = this.createElement(this.createArrowTemplate());
 
     this.initialSort();
@@ -38,10 +44,12 @@ export default class SortableTableV2 extends SortableTable {
   }
 
   sortOnServer(field, order) {
-    //
+    this.render();
   }
 
   initialSort() {
+    this.render();
+
     const sortedColumn = this.subElements.header.querySelector(`.sortable-table__cell[data-id=${this.sorted.id}]`);
 
     if (!sortedColumn) {
