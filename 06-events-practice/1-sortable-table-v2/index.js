@@ -48,8 +48,6 @@ export default class SortableTableV2 extends SortableTable {
   }
 
   initialSort() {
-    this.render();
-
     const sortedColumn = this.subElements.header.querySelector(`.sortable-table__cell[data-id=${this.sorted.id}]`);
 
     if (!sortedColumn) {
