@@ -1,16 +1,19 @@
 import SortableTable from '../../05-dom-document-loading/2-sortable-table-v1/index.js';
 
 export default class SortableTableV2 extends SortableTable {
+  offsetStart = 0;
+  offsetEnd = 20;
+
   constructor(headersConfig, {
     data = [],
-    sorted = {}
+    sorted = {},
+    isSortLocally = true,
+    url = ''
   } = {}) {
     super(headersConfig, data);
-
-    this.sortOnClient = super.sort;
+    this.url = url;
     this.sorted = sorted;
-    this.isSortLocally = true;
-
+    this.isSortLocally = isSortLocally;
     this.arrowElement = this.createElement(this.createArrowTemplate());
 
     this.initialSort();
@@ -25,12 +28,23 @@ export default class SortableTableV2 extends SortableTable {
     `;
   }
 
-  sort(sortField, sortOrder) {
+  sort(field, order) {
+    this.sorted.id = field;
+    this.sorted.order = order;
+
     if (this.isSortLocally) {
-      this.sortOnClient(sortField, sortOrder);
+      this.sortOnClient(field, order);
     } else {
-      this.sortOnServer();
+      this.sortOnServer(field, order);
     }
+  }
+
+  sortOnClient(field, order) {
+    super.sort(field, order);
+  }
+
+  sortOnServer(field, order) {
+    this.render();
   }
 
   initialSort() {
@@ -45,7 +59,7 @@ export default class SortableTableV2 extends SortableTable {
     sortedColumn.append(this.arrowElement);
   }
 
-  tableHeaderPointerdownHandler = (event) => {
+  tableHeaderPointerdownHandler(event) {
     const cellElement = event.target.closest('.sortable-table__cell');
 
     if (!cellElement) {
@@ -64,9 +78,11 @@ export default class SortableTableV2 extends SortableTable {
     cellElement.append(this.arrowElement);
 
     this.sort(sortField, sortOrder);
-  };
+  }
 
   createListeners() {
+    this.tableHeaderPointerdownHandler = this.tableHeaderPointerdownHandler.bind(this);
+
     this.subElements.header.addEventListener('pointerdown', this.tableHeaderPointerdownHandler);
   }
 
